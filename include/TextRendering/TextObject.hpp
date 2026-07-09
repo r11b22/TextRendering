@@ -1,6 +1,7 @@
 #pragma once
 
 
+#include "Asset/AssetReference.hpp"
 #include "Defaults/Objects/Drawables/MeshObject.h"
 #include "Renderer/RenderCommand.h"
 #include "TextRendering/Font.hpp"
@@ -9,7 +10,7 @@
 class TextObject : public MeshObject {
     private:
         std::string mText;
-        Font mFont;
+        AssetReference<Font> mFont;
 
         float mLastAdvance = 0;
         std::vector<float> mVertices;
@@ -18,7 +19,7 @@ class TextObject : public MeshObject {
         unsigned int mIndexOffset = 0;
         float mVertexOffset = 0;
     public:
-        TextObject(std::string name, Font font, std::string text);
+        TextObject(std::string name, AssetReference<Font> font, std::string text);
 
         void onLoad() override;
 

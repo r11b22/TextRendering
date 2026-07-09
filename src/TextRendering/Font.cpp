@@ -4,8 +4,8 @@
 
 
 
-Font::Font(FontMetadata metadata, TextureReference atlas)
-    : mMetadata(metadata), mAtlas(atlas)
+Font::Font(std::string name, FontMetadata metadata, TextureReference atlas)
+    : Asset(std::move(name)), mMetadata(metadata), mAtlas(atlas)
 {}
 
 

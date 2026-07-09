@@ -22,8 +22,14 @@ in vec3 FragPos; // pixel position
 in vec3 Normal;
 in vec2 UV;
 
+float median(float r, float g, float b) {
+    return max(min(r, g), min(max(r, g), b));
+}
+
 float getDistance(vec4 color) {
-    const float signedSDF = color.r - 0.5;
+    vec3 rgb = color.rgb;
+
+    float signedSDF = median(rgb.r, rgb.g, rgb.b) - 0.5;
 
     const float pixelDistance = (signedSDF * uDistanceRange) + uDistanceRangeMiddle;
 

@@ -11,7 +11,7 @@
 #include <iostream>
 #include <optional>
 
-Font FontLoader::readFiles(std::filesystem::path atlas, std::filesystem::path metadata, AssetManager& assetManagers) const {
+Font FontLoader::readFiles(std::string name, std::filesystem::path atlas, std::filesystem::path metadata, AssetManager& assetManagers) const {
     AssetLoadInfo<Texture> atlasLoadInfo{"fontAtlas", atlas, true};
 
     TextureReference tex = assetManagers.loadAsset(atlasLoadInfo);
@@ -25,7 +25,7 @@ Font FontLoader::readFiles(std::filesystem::path atlas, std::filesystem::path me
 
     Json metadataJson = loader.readFile(metadata);
 
-    Font font{metadataFromJson(metadataJson), tex};
+    Font font{std::move(name), metadataFromJson(metadataJson), tex};
 
     return font;
 }

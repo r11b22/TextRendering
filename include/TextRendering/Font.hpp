@@ -1,13 +1,15 @@
 #pragma once
 
+#include "Asset/Asset.hpp"
+#include "Asset/AssetReference.hpp"
 #include "TextRendering/FontMetadata.hpp"
 #include "Texture/TextureReference.hpp"
-class Font {
+class Font : public Asset{
     private:
         FontMetadata mMetadata;
         TextureReference mAtlas;
     public:
-        Font(FontMetadata metadata, TextureReference atlas);
+        Font(std::string name, FontMetadata metadata, TextureReference atlas);
 
         TextureReference getAtlas() const;
 

@@ -13,18 +13,19 @@
 #include "glm/ext/vector_float3.hpp"
 #include <vector>
 
-TextObject::TextObject(std::string name, Font font, std::string text)
+TextObject::TextObject(std::string name, AssetReference<Font> font, std::string text)
     : TransformableObject(name), MeshObject(name, {}, Material{"TextMaterial", glm::vec3{1.0f}}),
     mText(std::move(text)),
     mFont(font)
 {
     setShader("textShader");
-    Material atlasMaterial = {"Textmaterial", mFont.getAtlas()};
-    setMaterial(atlasMaterial);
+
 }
 
 
 void TextObject::onLoad() {
+    Material atlasMaterial = {"Textmaterial", getAssetManager().getAsset(mFont)->getAtlas()};
+    setMaterial(atlasMaterial);
     createMesh();
 }
 
@@ -41,8 +42,10 @@ std::vector<RenderCommand> TextObject::getRenderCommands() {
     drawCommand.material = getMaterial();
     drawCommand.shaderName = getShader();
 
-    drawCommand.staticUniforms.push_back({"uDistanceRange", mFont.getMetadata().getDistanceRange()});
-    drawCommand.staticUniforms.push_back({"uDistanceRangeMiddle", mFont.getMetadata().getDistanceRangeMiddle()});
+    Font* font = getAssetManager().getAsset(mFont);
+
+    drawCommand.staticUniforms.push_back({"uDistanceRange", font->getMetadata().getDistanceRange()});
+    drawCommand.staticUniforms.push_back({"uDistanceRangeMiddle", font->getMetadata().getDistanceRangeMiddle()});
 
     drawCommand.staticUniforms.push_back({"uTextColor", glm::vec3{1.0f}});
 
@@ -86,13 +89,13 @@ void TextObject::createMesh() {
 void TextObject::createSingleCharacter(size_t character){
     mVertexOffset += mLastAdvance;
 
-
-    const GlyphMetadata& glyph = mFont.getMetadata().getGlyph(character);
+    Font* font = getAssetManager().getAsset(mFont);
+    const GlyphMetadata& glyph = font->getMetadata().getGlyph(character);
 
 
 
     const GlyphVertices vertices = glyph.getPlaneBoundVertices();
-    const GlyphUVs uvs = mFont.getMetadata().getGlyphUVs(character);
+    const GlyphUVs uvs = font->getMetadata().getGlyphUVs(character);
     std::vector<float> newVertices = {
         // left
         mVertexOffset + vertices.bottomLeft.x, vertices.bottomLeft.y,       0.0f, 0.0f, 0.0f, 1.0f,   uvs.bottomLeft.x, uvs.bottomLeft.y, // 0: Bottom-Left

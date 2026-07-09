@@ -7,6 +7,7 @@ class MainScene : public Scene{
     private:
         InputManager* mInputManager = nullptr;
     public:
+        MainScene();
         ~MainScene();
         void onLoad(Renderer& renderer, Window &window) override;
     private:

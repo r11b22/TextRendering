@@ -1,6 +1,8 @@
 
 
 #include "MainScene.hpp"
+#include "Asset/AssetLoader.hpp"
+#include "Asset/AssetReference.hpp"
 #include "Defaults/Camera/FirstPersonCamera.h"
 #include "Defaults/Objects/Lighting/AmbientLight.h"
 #include "FileReader.h"
@@ -12,6 +14,16 @@
 #include "Window.h"
 #include "glm/ext/vector_float3.hpp"
 #include <memory>
+#include "TextRendering/FontLoader.hpp"
+
+MainScene::MainScene(){
+    AssetLoadInfo<Font> fontLoadInfo{};
+    fontLoadInfo.name = "testFont";
+    fontLoadInfo.atlasPath = "fonts/font-atlas/FreeSans.png";
+    fontLoadInfo.metadataPath = "fonts/font-atlas/FreeSans.json";
+
+    addAsset(fontLoadInfo);
+}
 
 void MainScene::onLoad(Renderer& renderer, Window& window){
     std::unique_ptr<ShaderProgram> textShader = std::make_unique<ShaderProgram>();
@@ -27,13 +39,12 @@ void MainScene::onLoad(Renderer& renderer, Window& window){
     ObjectReference<FirstPersonCamera> camera = createObject<FirstPersonCamera>("Camera", mInputManager, &window);
     camera->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
 
-
-
     FontLoader loader{};
 
-    Font font = loader.readFiles("fonts/font-atlas/FreeSans.png", "fonts/font-atlas/FreeSans.json", getAssetManager());
+    AssetReference<Font> font = getAssetManager().getAssetByName<Font>("testFont");
 
-    ObjectReference<TextObject> mText = createObject<TextObject>("test text", font, "Hello World!");
+    ObjectReference<TextObject> text = createObject<TextObject>("test text", font, "Hello world");
+    text->setPosition(glm::vec3{-2.5f, 0.0f, 0.0f});
 }
 
 
