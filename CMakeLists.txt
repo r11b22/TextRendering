@@ -36,8 +36,14 @@ add_executable(${PROJECT_NAME}
     src/TextRendering/FontLoader.cpp
     include/TextRendering/FontLoader.hpp
 
-    src/TextRendering/TextObject.cpp
-    include/TextRendering/TextObject.hpp
+    src/TextRendering/Text/Text.cpp
+    include/TextRendering/Text/Text.hpp
+
+    src/TextRendering/Text/TextMesh.cpp
+    include/TextRendering/Text/TextMesh.hpp
+
+    src/TextRendering/Text/TextUI.cpp
+    include/TextRendering/Text/TextUI.hpp
 )
 
 # Include the headers folder

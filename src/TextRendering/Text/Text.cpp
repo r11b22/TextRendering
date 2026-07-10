@@ -1,0 +1,85 @@
+#include "TextRendering/Text/Text.hpp"
+
+#include "Renderer/RenderCommand.h"
+#include "TextRendering/FontMetadata.hpp"
+#include "TextRendering/GlyphMetadata.hpp"
+#include <stdexcept>
+#include <vector>
+
+Text::Text(std::string text, AssetReference<Font> font)
+    :
+    mText(std::move(text)),
+    mFont(font)
+{}
+
+
+
+MeshReference Text::createMesh(AssetManager& assetManager) {
+
+    // Setup start vertex
+    mVertices = {};
+
+    // Setup start indices
+    mIndices = {};
+
+    mIndexOffset = 0;
+    mVertexOffset = 0;
+    mLastAdvance = 0;
+    for (const auto& character : mText){
+        createSingleCharacter(character, assetManager.getAsset(mFont));
+    }
+
+
+    Mesh mesh{"textMesh"};
+
+    mesh.setVertices(mVertices);
+    mesh.setIndices(mIndices);
+
+    return assetManager.addAsset(std::move(mesh));
+}
+
+void Text::setupUniforms(DrawCommand& command, const AssetManager& assetManager) const{
+    const Font* font = assetManager.getAsset(mFont);
+
+    command.staticUniforms.push_back({"uDistanceRange", font->getMetadata().getDistanceRange()});
+    command.staticUniforms.push_back({"uDistanceRangeMiddle", font->getMetadata().getDistanceRangeMiddle()});
+    command.staticUniforms.push_back({"uTextColor", glm::vec3{1.0f}});
+}
+
+void Text::createSingleCharacter(size_t character, Font* font){
+    if (font == nullptr){
+        throw std::runtime_error("No font provided to render text with!");
+    }
+
+
+    mVertexOffset += mLastAdvance;
+
+    const GlyphMetadata& glyph = font->getMetadata().getGlyph(character);
+
+
+
+    const GlyphVertices vertices = glyph.getPlaneBoundVertices();
+    const GlyphUVs uvs = font->getMetadata().getGlyphUVs(character);
+    std::vector<float> newVertices = {
+        // left
+        mVertexOffset + vertices.bottomLeft.x, vertices.bottomLeft.y,       0.0f, 0.0f, 0.0f, 1.0f,   uvs.bottomLeft.x, uvs.bottomLeft.y, // 0: Bottom-Left
+        mVertexOffset + vertices.topLeft.x,  vertices.topLeft.y,            0.0f, 0.0f, 0.0f, 1.0f,   uvs.topLeft.x, uvs.topLeft.y, // 1: Top-Left
+
+        // right
+        mVertexOffset + vertices.bottomRight.x, vertices.bottomRight.y,     0.0f, 0.0f, 0.0f, 1.0f,   uvs.bottomRight.x, uvs.bottomRight.y,
+        mVertexOffset + vertices.topRight.x,  vertices.topRight.y,          0.0f, 0.0f, 0.0f, 1.0f,   uvs.topRight.x, uvs.topRight.y
+    };
+
+    mVertices.insert(mVertices.end(), newVertices.begin(), newVertices.end());
+
+    std::vector<unsigned int> newIndices = {
+        mIndexOffset + 0, mIndexOffset + 2, mIndexOffset + 3, // Triangle 1: Bottom-Left -> Bottom-Right -> Top-Right
+        mIndexOffset + 3, mIndexOffset + 1, mIndexOffset + 0  // Triangle 2: Top-Right -> Top-Left -> Bottom-Left
+    };
+    mIndices.insert(mIndices.end(), newIndices.begin(), newIndices.end());
+
+
+    mIndexOffset += 4;
+
+    mLastAdvance = glyph.getAdvance();
+}

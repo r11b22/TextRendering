@@ -1,15 +1,17 @@
 #pragma once
 
-
+#include "Asset/AssetManager.hpp"
 #include "Asset/AssetReference.hpp"
-#include "Defaults/Objects/Drawables/MeshObject.h"
+#include "Mesh/MeshReference.hpp"
 #include "Renderer/RenderCommand.h"
 #include "TextRendering/Font.hpp"
-#include <cstddef>
+#include <string>
 #include <vector>
-class TextObject : public MeshObject {
+
+class Text {
     private:
         std::string mText;
+
         AssetReference<Font> mFont;
 
         float mLastAdvance = 0;
@@ -19,12 +21,10 @@ class TextObject : public MeshObject {
         unsigned int mIndexOffset = 0;
         float mVertexOffset = 0;
     public:
-        TextObject(std::string name, AssetReference<Font> font, std::string text);
+        Text(std::string text, AssetReference<Font> font);
 
-        void onLoad() override;
-
-        std::vector<RenderCommand> getRenderCommands() override;
+        MeshReference createMesh(AssetManager& assetManager);
+        void setupUniforms(DrawCommand& command, const AssetManager& assetManager) const;
     private:
-        void createMesh();
-        void createSingleCharacter(size_t character);
+        void createSingleCharacter(size_t character, Font* font);
 };
