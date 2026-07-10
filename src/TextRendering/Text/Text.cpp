@@ -38,17 +38,20 @@ MeshReference Text::createMesh(AssetManager& assetManager) {
     }
 
 
-    Mesh mesh{"textMesh"};
-
-    mesh.setVertices(mVertices);
-    mesh.setIndices(mIndices);
-
-    // Remove old asset
     if (!mMeshReference.isNoReference()){
-        assetManager.removeAsset(mMeshReference);
+        Mesh* mesh = assetManager.getAsset(mMeshReference);
+        mesh->setVertices(mVertices);
+        mesh->setIndices(mIndices);
+    }else{
+        Mesh mesh{"textMesh"};
+
+        mesh.setVertices(mVertices);
+        mesh.setIndices(mIndices);
+
+        mMeshReference = assetManager.addAsset(std::move(mesh));
     }
 
-    mMeshReference = assetManager.addAsset(std::move(mesh));
+
     return mMeshReference;
 }
 
