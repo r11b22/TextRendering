@@ -6,13 +6,19 @@
 #include <stdexcept>
 #include <vector>
 
-Text::Text(std::string text, AssetReference<Font> font)
+Text::Text(AssetReference<Font> font)
     :
-    mText(std::move(text)),
+    mText(""),
     mFont(font)
 {}
 
+void Text::setText(std::string text){
+    mText = std::move(text);
+}
 
+const std::string& Text::getText() const {
+    return mText;
+}
 
 MeshReference Text::createMesh(AssetManager& assetManager) {
 
@@ -35,7 +41,8 @@ MeshReference Text::createMesh(AssetManager& assetManager) {
     mesh.setVertices(mVertices);
     mesh.setIndices(mIndices);
 
-    return assetManager.addAsset(std::move(mesh));
+    mMeshReference = assetManager.addAsset(std::move(mesh));
+    return mMeshReference;
 }
 
 void Text::setupUniforms(DrawCommand& command, const AssetManager& assetManager) const{

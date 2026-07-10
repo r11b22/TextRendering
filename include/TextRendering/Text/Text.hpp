@@ -20,8 +20,14 @@ class Text {
 
         unsigned int mIndexOffset = 0;
         float mVertexOffset = 0;
+
+        MeshReference mMeshReference;
     public:
-        Text(std::string text, AssetReference<Font> font);
+        Text(AssetReference<Font> font);
+
+
+        void setText(std::string text);
+        const std::string& getText() const;
 
         MeshReference createMesh(AssetManager& assetManager);
         void setupUniforms(DrawCommand& command, const AssetManager& assetManager) const;

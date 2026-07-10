@@ -15,11 +15,13 @@
 
 TextMesh::TextMesh(std::string name, AssetReference<Font> font, std::string text)
     : TransformableObject(name), MeshObject(name, {}, Material{"TextMaterial", glm::vec3{1.0f}}),
-    mText(std::move(text), font),
+    mText(font),
     mFont(font)
 {
     setShader("textShader");
     setRenderPass(0);
+
+    mText.setText(std::move(text));
 }
 
 
