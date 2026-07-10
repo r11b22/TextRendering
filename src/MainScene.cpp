@@ -52,9 +52,13 @@ void MainScene::onLoad(Renderer& renderer, Window& window){
     ObjectReference<TextMesh> text = createObject<TextMesh>("test text", font, "World text");
     text->setPosition(glm::vec3{-2.5f, 0.0f, 0.0f});
 
+    text->setText("World text changed!");
+
     ObjectReference<TextUI> uiText = createObject<TextUI>("test ui text", font, "UI text");
     uiText->setPosition(glm::vec3{-200.0f, 200.0f, 0.0f});
     uiText->setScale(glm::vec3{20.0f});
+
+    uiText->setText("UI text changed!");
 }
 
 

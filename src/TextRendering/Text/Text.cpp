@@ -22,6 +22,8 @@ const std::string& Text::getText() const {
 
 MeshReference Text::createMesh(AssetManager& assetManager) {
 
+
+
     // Setup start vertex
     mVertices = {};
 
@@ -40,6 +42,11 @@ MeshReference Text::createMesh(AssetManager& assetManager) {
 
     mesh.setVertices(mVertices);
     mesh.setIndices(mIndices);
+
+    // Remove old asset
+    if (!mMeshReference.isNoReference()){
+        assetManager.removeAsset(mMeshReference);
+    }
 
     mMeshReference = assetManager.addAsset(std::move(mesh));
     return mMeshReference;
