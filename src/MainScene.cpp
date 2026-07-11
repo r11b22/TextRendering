@@ -4,7 +4,6 @@
 #include "Asset/AssetLoader.hpp"
 #include "Asset/AssetReference.hpp"
 #include "Defaults/Camera/FirstPersonCamera.h"
-#include "Defaults/Objects/Lighting/AmbientLight.h"
 #include "FileReader.h"
 #include "Object/ObjectRepository.h"
 #include "Renderer/RenderPass.hpp"
@@ -19,11 +18,11 @@
 #include <memory>
 #include "TextRendering/FontLoader.hpp"
 
+#include "Assets/FreeSansPNG.h"
+#include "Assets/FreeSansJSON.h"
+
 MainScene::MainScene(){
-    AssetLoadInfo<Font> fontLoadInfo{};
-    fontLoadInfo.name = "testFont";
-    fontLoadInfo.atlasPath = "fonts/font-atlas/FreeSans.png";
-    fontLoadInfo.metadataPath = "fonts/font-atlas/FreeSans.json";
+    AssetLoadInfo<Font> fontLoadInfo = AssetLoadInfo<Font>::FromEmbedded("testFont", FreeSans_png, FreeSans_json);
 
     addAsset(fontLoadInfo);
 

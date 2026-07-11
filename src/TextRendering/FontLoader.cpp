@@ -11,21 +11,43 @@
 #include <iostream>
 #include <optional>
 
-Font FontLoader::readFiles(std::string name, std::filesystem::path atlas, std::filesystem::path metadata, AssetManager& assetManagers) const {
-    AssetLoadInfo<Texture> atlasLoadInfo{"fontAtlas", atlas, true};
+void FontLoader::readFiles(std::filesystem::path atlas, std::filesystem::path metadata, AssetManager& assetManagers) {
+    AssetLoadInfo<Texture> atlasLoadInfo = AssetLoadInfo<Texture>::FromPath("fontAtlas", atlas, true);
 
-    TextureReference tex = assetManagers.loadAsset(atlasLoadInfo);
+    mTextureReference = assetManagers.loadAsset(atlasLoadInfo);
 
-    Texture* texture = assetManagers.getAsset(tex);
+    Texture* texture = assetManagers.getAsset(mTextureReference);
+    texture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    texture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+
+
+    JsonLoader loader{};
+    loader.readFile(metadata);
+
+    mMetadataJson = std::move(loader.createJson());
+
+
+}
+
+void FontLoader::readRaw(EmbeddedAsset atlas, EmbeddedAsset metadata, AssetManager& assetManagers) {
+    AssetLoadInfo<Texture> atlasLoadInfo = AssetLoadInfo<Texture>::FromEmbedded("fontAtlas", atlas, true);
+
+    mTextureReference = assetManagers.loadAsset(atlasLoadInfo);
+
+    Texture* texture = assetManagers.getAsset(mTextureReference);
     texture->setParameter(GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     texture->setParameter(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 
     JsonLoader loader{};
 
-    Json metadataJson = loader.readFile(metadata);
+    loader.readRaw(metadata);
 
-    Font font{std::move(name), metadataFromJson(metadataJson), tex};
+    mMetadataJson = std::move(loader.createJson());
+}
+
+Font FontLoader::createFont(std::string name){
+    Font font{std::move(name), metadataFromJson(mMetadataJson), mTextureReference};
 
     return font;
 }

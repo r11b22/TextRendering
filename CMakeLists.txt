@@ -44,6 +44,8 @@ add_executable(${PROJECT_NAME}
 
     src/TextRendering/Text/TextUI.cpp
     include/TextRendering/Text/TextUI.hpp
+
+    include/Assets/FreeSansPNG.h
 )
 
 # Include the headers folder
