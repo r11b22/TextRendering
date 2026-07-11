@@ -5,4 +5,5 @@ msdf-atlas-gen \
   -json font-atlas/FreeSans.json \
   -pxalign horizontal \
   -dimensions 512 512 \
-  -charset charset.txt
+  -charset charset.txt \
+  -outerpxpadding 4
