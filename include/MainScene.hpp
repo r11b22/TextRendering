@@ -12,8 +12,10 @@ class MainScene : public Scene{
 
         ObjectReference<TextUI> mFPSCounter;
 
+        ObjectReference<TextUI> mUpdatingTest;
+
         float mUpdateCounter = 0;
-        float mUpdateTime = 2;
+        float mUpdateTime = 0.5;
     public:
         MainScene();
         ~MainScene();

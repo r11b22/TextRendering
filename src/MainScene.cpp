@@ -59,6 +59,10 @@ void MainScene::onLoad(Renderer& renderer, Window& window){
     mFPSCounter->setPosition(glm::vec3{-400.0f, 200.0f, 0.0f});
     mFPSCounter->setScale(glm::vec3{20.0f});
 
+    mUpdatingTest = createObject<TextUI>("update text", font, "");
+    mUpdatingTest->setPosition(glm::vec3{200.0f, 200.0f, 0.0f});
+    mUpdatingTest->setScale(glm::vec3{20.0f});
+
 }
 
 void MainScene::onUpdate(Renderer& renderer, Window& window, float deltaT) {
@@ -70,6 +74,7 @@ void MainScene::onUpdate(Renderer& renderer, Window& window, float deltaT) {
     }
     mUpdateCounter += deltaT;
 
+    mUpdatingTest->setText(std::format("{}", mUpdateCounter));
 }
 
 
