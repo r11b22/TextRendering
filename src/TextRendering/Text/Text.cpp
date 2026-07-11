@@ -21,9 +21,6 @@ const std::string& Text::getText() const {
 }
 
 MeshReference Text::createMesh(AssetManager& assetManager) {
-
-
-
     // Setup start vertex
     mVertices = {};
 
@@ -33,7 +30,11 @@ MeshReference Text::createMesh(AssetManager& assetManager) {
     mIndexOffset = 0;
     mVertexOffset = 0;
     mLastAdvance = 0;
-    for (const auto& character : mText){
+
+    auto it = mText.begin();
+    auto end = mText.end();
+    for (unsigned char c : mText) {
+        size_t character = c;
         createSingleCharacter(character, assetManager.getAsset(mFont));
     }
 

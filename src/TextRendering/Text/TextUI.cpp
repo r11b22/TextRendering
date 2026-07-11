@@ -21,6 +21,7 @@ TextUI::TextUI(std::string name, AssetReference<Font> font, std::string text)
     setShader("textShader");
     setRenderPass(1);
 
+
     mText.setText(std::move(text));
 }
 

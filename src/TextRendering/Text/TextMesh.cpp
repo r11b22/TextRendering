@@ -26,8 +26,11 @@ TextMesh::TextMesh(std::string name, AssetReference<Font> font, std::string text
 
 void TextMesh::setText(std::string text){
     mText.setText(std::move(text));
-    MeshReference meshRef = mText.createMesh(getAssetManager());
-    setMesh(meshRef);
+
+    if(isLoaded()){
+        MeshReference meshRef = mText.createMesh(getAssetManager());
+        setMesh(meshRef);
+    }
 }
 
 
