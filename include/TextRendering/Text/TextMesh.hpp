@@ -18,6 +18,9 @@ class TextMesh : public MeshObject {
 
         void setText(std::string text);
 
+        void setColor(glm::vec3 color);
+        const glm::vec3& getColor() const;
+
         void onLoad() override;
 
         std::vector<RenderPassCommands> getRenderCommands() override;

@@ -31,6 +31,14 @@ void TextUI::setText(std::string text){
     setMesh(meshRef);
 }
 
+void TextUI::setColor(glm::vec3 color){
+    mText.setColor(std::move(color));
+}
+
+const glm::vec3& TextUI::getColor() const {
+    return mText.getColor();
+}
+
 
 void TextUI::onLoad() {
     Material atlasMaterial = {"Textmaterial", getAssetManager().getAsset(mFont)->getAtlas()};

@@ -3,6 +3,7 @@
 #include "Renderer/RenderCommand.h"
 #include "TextRendering/FontMetadata.hpp"
 #include "TextRendering/GlyphMetadata.hpp"
+#include "glm/ext/vector_float3.hpp"
 #include <stdexcept>
 #include <vector>
 
@@ -61,7 +62,15 @@ void Text::setupUniforms(DrawCommand& command, const AssetManager& assetManager)
 
     command.staticUniforms.push_back({"uDistanceRange", font->getMetadata().getDistanceRange()});
     command.staticUniforms.push_back({"uDistanceRangeMiddle", font->getMetadata().getDistanceRangeMiddle()});
-    command.staticUniforms.push_back({"uTextColor", glm::vec3{1.0f}});
+    command.staticUniforms.push_back({"uTextColor", mColor});
+}
+
+void Text::setColor(glm::vec3 color){
+    mColor = std::move(color);
+}
+
+const glm::vec3& Text::getColor() const{
+    return mColor;
 }
 
 void Text::createSingleCharacter(size_t character, Font* font){

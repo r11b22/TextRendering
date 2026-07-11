@@ -62,6 +62,7 @@ void MainScene::onLoad(Renderer& renderer, Window& window){
     mUpdatingTest = createObject<TextUI>("update text", font, "");
     mUpdatingTest->setPosition(glm::vec3{200.0f, 200.0f, 0.0f});
     mUpdatingTest->setScale(glm::vec3{20.0f});
+    mUpdatingTest->setColor(glm::vec3{0.0f, 1.0f, 1.0f});
 
 }
 

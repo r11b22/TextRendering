@@ -5,6 +5,7 @@
 #include "Mesh/MeshReference.hpp"
 #include "Renderer/RenderCommand.h"
 #include "TextRendering/Font.hpp"
+#include "glm/ext/vector_float3.hpp"
 #include <string>
 #include <vector>
 
@@ -22,6 +23,8 @@ class Text {
         float mVertexOffset = 0;
 
         MeshReference mMeshReference;
+
+        glm::vec3 mColor = glm::vec3{1.0f};
     public:
         Text(AssetReference<Font> font);
 
@@ -31,6 +34,9 @@ class Text {
 
         MeshReference createMesh(AssetManager& assetManager);
         void setupUniforms(DrawCommand& command, const AssetManager& assetManager) const;
+
+        void setColor(glm::vec3 color);
+        const glm::vec3& getColor() const;
     private:
         void createSingleCharacter(size_t character, Font* font);
 };

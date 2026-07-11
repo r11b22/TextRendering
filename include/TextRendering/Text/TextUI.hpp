@@ -5,6 +5,7 @@
 #include "Defaults/Objects/Drawables/MeshObject.h"
 #include "TextRendering/Font.hpp"
 #include "TextRendering/Text/Text.hpp"
+#include "glm/ext/vector_float3.hpp"
 #include <vector>
 
 class TextUI : public MeshObject {
@@ -16,6 +17,9 @@ class TextUI : public MeshObject {
         TextUI(std::string name, AssetReference<Font> font, std::string text);
 
         void setText(std::string text);
+
+        void setColor(glm::vec3 color);
+        const glm::vec3& getColor() const;
 
         void onLoad() override;
 
