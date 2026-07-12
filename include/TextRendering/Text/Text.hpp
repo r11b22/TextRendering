@@ -9,6 +9,8 @@
 #include <string>
 #include <vector>
 
+using namespace Spelt;
+
 class Text {
     private:
         std::string mText;

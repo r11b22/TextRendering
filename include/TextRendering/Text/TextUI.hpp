@@ -8,7 +8,9 @@
 #include "glm/ext/vector_float3.hpp"
 #include <vector>
 
-class TextUI : public MeshObject {
+using namespace Spelt;
+
+class TextUI : public Defaults::MeshObject {
     private:
         AssetReference<Font> mFont;
 

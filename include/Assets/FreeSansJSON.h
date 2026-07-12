@@ -6,11 +6,13 @@
 
 #ifndef EMBEDDED_ASSET_STRUCT
 #define EMBEDDED_ASSET_STRUCT
-struct EmbeddedAsset {
-    const char* version;
-    const unsigned char* data;
-    const unsigned int size;
-};
+namespace Spelt {
+   struct EmbeddedAsset {
+       const char* version;
+       const unsigned char* data;
+       const unsigned int size;
+   };
+}
 #endif // EMBEDDED_ASSET_STRUCT
 
 // Automatically generated raw data from FreeSans.json
@@ -1941,7 +1943,7 @@ inline const unsigned char FreeSans_json_raw_data[] = {
 };
 
 // Package containing the version, data pointer, and size
-inline const EmbeddedAsset FreeSans_json = {
+inline const Spelt::EmbeddedAsset FreeSans_json = {
     "0.1.0",
     FreeSans_json_raw_data,
     23065

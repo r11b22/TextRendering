@@ -7,6 +7,9 @@
 #include <stdexcept>
 #include <vector>
 
+using namespace Spelt;
+
+
 Text::Text(AssetReference<Font> font)
     :
     mText(""),

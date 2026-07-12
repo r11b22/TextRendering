@@ -6,6 +6,8 @@
 #include "Scene/Scene.hpp"
 #include "TextRendering/Text/TextUI.hpp"
 
+using namespace Spelt;
+
 class MainScene : public Scene{
     private:
         InputManager* mInputManager = nullptr;

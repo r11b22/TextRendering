@@ -44,7 +44,7 @@ void MainScene::onLoad(Renderer& renderer, Window& window){
     mInputManager = new InputManager(window);
 
 
-    ObjectReference<FirstPersonCamera> camera = createObject<FirstPersonCamera>("Camera", mInputManager, &window);
+    ObjectReference<Defaults::FirstPersonCamera> camera = createObject<Defaults::FirstPersonCamera>("Camera", mInputManager, &window);
     camera->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
 
 

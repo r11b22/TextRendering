@@ -4,6 +4,10 @@
 #include "Asset/AssetReference.hpp"
 #include "TextRendering/FontMetadata.hpp"
 #include "Texture/TextureReference.hpp"
+
+using namespace Spelt;
+
+
 class Font : public Asset{
     private:
         FontMetadata mMetadata;

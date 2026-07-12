@@ -8,7 +8,11 @@
 #include "TextRendering/Text/Text.hpp"
 #include <cstddef>
 #include <vector>
-class TextMesh : public MeshObject {
+
+using namespace Spelt;
+
+
+class TextMesh : public Defaults::MeshObject {
     private:
         AssetReference<Font> mFont;
 
