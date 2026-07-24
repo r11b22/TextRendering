@@ -27,16 +27,16 @@ MainScene::MainScene(){
     addAsset(fontLoadInfo);
 
     createRenderPass();
-    getRenderPass(1).setProjectionType(ProjectionType::Orthographic);
-    getRenderPass(1).setCameraType(CameraType::UI);
+    getRenderPass(1).value().setProjectionType(ProjectionType::Orthographic);
+    getRenderPass(1).value().setCameraType(CameraType::UI);
 }
 
 void MainScene::onLoad(Renderer& renderer, Window& window){
     window.setVSYNC(false);
 
     std::unique_ptr<ShaderProgram> textShader = std::make_unique<ShaderProgram>();
-    textShader->addShader(FileReader::readFile("Shaders/textShader/vertex.glsl").c_str(), GL_VERTEX_SHADER);
-    textShader->addShader(FileReader::readFile("Shaders/textShader/fragment.glsl").c_str(), GL_FRAGMENT_SHADER);
+    textShader->addShader(FileReader::readFile("Shaders/textShader/vertex.glsl").value().c_str(), GL_VERTEX_SHADER);
+    textShader->addShader(FileReader::readFile("Shaders/textShader/fragment.glsl").value().c_str(), GL_FRAGMENT_SHADER);
     textShader->link();
 
     renderer.addShaderProgram("textShader", std::move(textShader));
@@ -48,7 +48,7 @@ void MainScene::onLoad(Renderer& renderer, Window& window){
     camera->setPosition(glm::vec3(0.0f, 0.0f, 5.0f));
 
 
-    AssetReference<Font> font = getAssetManager().getAssetByName<Font>("testFont");
+    AssetReference<Font> font = getAssetManager().value().getAssetByName<Font>("testFont");
 
     ObjectReference<TextMesh> text = createObject<TextMesh>("test text", font, "World text.");
     text->setPosition(glm::vec3{-2.5f, 0.0f, 0.0f});

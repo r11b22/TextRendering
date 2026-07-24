@@ -11,7 +11,7 @@ include(FetchContent)
 
 FetchContent_Declare(SpeltEngine
         GIT_REPOSITORY https://github.com/r11b22/SpeltEngine.git
-        GIT_TAG        v0.5.0
+        GIT_TAG        main
 )
 
 FetchContent_MakeAvailable(SpeltEngine)

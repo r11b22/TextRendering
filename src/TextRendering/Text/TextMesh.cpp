@@ -28,7 +28,7 @@ void TextMesh::setText(std::string text){
     mText.setText(std::move(text));
 
     if(isLoaded()){
-        MeshReference meshRef = mText.createMesh(getAssetManager());
+        MeshReference meshRef = mText.createMesh(getAssetManager().value());
         setMesh(meshRef);
     }
 }
@@ -43,10 +43,10 @@ const glm::vec3& TextMesh::getColor() const {
 }
 
 void TextMesh::onLoad() {
-    Material atlasMaterial = {"Textmaterial", getAssetManager().getAsset(mFont)->getAtlas()};
+    Material atlasMaterial = {"Textmaterial", getAssetManager().value().getAsset(mFont)->getAtlas()};
     setMaterial(atlasMaterial);
 
-    MeshReference meshRef = mText.createMesh(getAssetManager());
+    MeshReference meshRef = mText.createMesh(getAssetManager().value());
     setMesh(meshRef);
 }
 
@@ -63,9 +63,9 @@ std::vector<RenderPassCommands> TextMesh::getRenderCommands() {
     drawCommand.material = getMaterial();
     drawCommand.shaderName = getShader();
 
-    Font* font = getAssetManager().getAsset(mFont);
+    Font* font = getAssetManager().value().getAsset(mFont);
 
-    mText.setupUniforms(drawCommand, getAssetManager());
+    mText.setupUniforms(drawCommand, getAssetManager().value());
 
 
     InstanceData instance;

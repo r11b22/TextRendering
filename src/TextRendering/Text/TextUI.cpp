@@ -27,7 +27,7 @@ TextUI::TextUI(std::string name, AssetReference<Font> font, std::string text)
 
 void TextUI::setText(std::string text){
     mText.setText(std::move(text));
-    MeshReference meshRef = mText.createMesh(getAssetManager());
+    MeshReference meshRef = mText.createMesh(getAssetManager().value());
     setMesh(meshRef);
 }
 
@@ -41,10 +41,10 @@ const glm::vec3& TextUI::getColor() const {
 
 
 void TextUI::onLoad() {
-    Material atlasMaterial = {"Textmaterial", getAssetManager().getAsset(mFont)->getAtlas()};
+    Material atlasMaterial = {"Textmaterial", getAssetManager().value().getAsset(mFont)->getAtlas()};
     setMaterial(atlasMaterial);
 
-    MeshReference meshRef = mText.createMesh(getAssetManager());
+    MeshReference meshRef = mText.createMesh(getAssetManager().value());
     setMesh(meshRef);
 }
 
@@ -64,9 +64,9 @@ std::vector<RenderPassCommands> TextUI::getRenderCommands() {
     drawCommand.material = getMaterial();
     drawCommand.shaderName = getShader();
 
-    Font* font = getAssetManager().getAsset(mFont);
+    Font* font = getAssetManager().value().getAsset(mFont);
 
-    mText.setupUniforms(drawCommand, getAssetManager());
+    mText.setupUniforms(drawCommand, getAssetManager().value());
 
     InstanceData instance;
     instance.addUniform({"uModelMatrix", getTransformationMatrix()});

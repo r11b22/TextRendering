@@ -1,5 +1,6 @@
 #include "TextRendering/FontLoader.hpp"
 #include "Asset/AssetLoader.hpp"
+#include "Error/Option.hpp"
 #include "Serial/Json/JsonLoader.hpp"
 #include "TextRendering/FontMetadata.hpp"
 #include "TextRendering/GlyphMetadata.hpp"
@@ -24,7 +25,8 @@ void FontLoader::readFiles(std::filesystem::path atlas, std::filesystem::path me
     JsonLoader loader{};
     loader.readFile(metadata);
 
-    mMetadataJson = std::move(loader.createJson());
+    // TODO use returned result
+    mMetadataJson = std::move(loader.createJson().value("Font metadata contained invalid Json"));
 
 
 }
@@ -43,7 +45,7 @@ void FontLoader::readRaw(EmbeddedAsset atlas, EmbeddedAsset metadata, AssetManag
 
     loader.readRaw(metadata);
 
-    mMetadataJson = std::move(loader.createJson());
+    mMetadataJson = std::move(loader.createJson().value("Font metadata contained invalid Json"));
 }
 
 Font FontLoader::createFont(std::string name){
@@ -56,44 +58,53 @@ Font FontLoader::createFont(std::string name){
 FontMetadata FontLoader::metadataFromJson(const Json& json) const{
     FontMetadata metadata{};
 
-    Json atlas = json.getObject("atlas");
+    Json atlas = json.getObject("atlas").value("Could not find atlas in font metadata");
 
-    int width = atlas.getNumber("width");
-    int height = atlas.getNumber("height");
+    int width = atlas.getNumber("width").value("Could not find atlas.width in font metadata");
+    int height = atlas.getNumber("height").value("Could not find atlas.height in font metadata");
 
     metadata.setDimensions({width, height});
 
-    float distanceRange = atlas.getNumber("distanceRange");
+    float distanceRange = atlas.getNumber("distanceRange").value("Could not find atlas.distanceRange in font metadata");
     metadata.setDistanceRange(distanceRange);
-    float distanceRangeMiddle = atlas.getNumber("distanceRangeMiddle");
+    float distanceRangeMiddle = atlas.getNumber("distanceRangeMiddle").value("Could not find atlas.distanceRangeMiddle in font metadata");
     metadata.setDistanceRangeMiddle(distanceRangeMiddle);
 
-    JsonArray glyphArray = json.getArray("glyphs");
+    JsonArray glyphArray = json.getArray("glyphs").value("Could not find glyphs in font metadata");
     for (int i = 0; i < glyphArray.size(); i++){
         GlyphMetadata glyphMetadata{};
 
 
-        Json glyphJson = glyphArray.getObject(i);
-        size_t unicode = static_cast<size_t>(glyphJson.getNumber("unicode"));
-        double advance = glyphJson.getNumber("advance");
+        Json glyphJson = glyphArray.getObject(i).value();
+        size_t unicode = static_cast<size_t>(glyphJson.getNumber("unicode").value(std::format("Could not find glyphs[{}].unicode in font metadata", i)));
+        double advance = glyphJson.getNumber("advance").value(std::format("Could not find glyphs[{}].advance in font metadata", i));
 
         glyphMetadata.setUnicode(unicode);
         glyphMetadata.setAdvance(advance);
 
-        std::optional<Json> planeBoundsO = glyphJson.tryGetObject("planeBounds");
+        Option<const Json&> planeBoundsO = glyphJson.getObject("planeBounds");
 
-        if (planeBoundsO.has_value()){
+        if (planeBoundsO.isValue()){
             Json planeBounds = planeBoundsO.value();
-            glm::vec4 bounds{planeBounds.getNumber("left"), planeBounds.getNumber("bottom"), planeBounds.getNumber("right"), planeBounds.getNumber("top")};
+            glm::vec4 bounds{
+                planeBounds.getNumber("left").value(std::format("Could not find glyphs[{}].planeBounds.left in font metadata", i)),
+                planeBounds.getNumber("bottom").value(std::format("Could not find glyphs[{}].planeBounds.bottom in font metadata", i)),
+                planeBounds.getNumber("right").value(std::format("Could not find glyphs[{}].planeBounds.right in font metadata", i)),
+                planeBounds.getNumber("top").value(std::format("Could not find glyphs[{}].planeBounds.top in font metadata", i))
+            };
             glyphMetadata.setPlaneBounds(bounds);
         }
 
-        std::optional<Json> atlasBoundsO = glyphJson.tryGetObject("atlasBounds");
+        Option<const Json&> atlasBoundsO = glyphJson.getObject("atlasBounds");
 
-        if (atlasBoundsO.has_value()){
+        if (atlasBoundsO.isValue()){
             Json atlasBounds = atlasBoundsO.value();
-            glm::vec4 bounds{atlasBounds.getNumber("left"), atlasBounds.getNumber("bottom"), atlasBounds.getNumber("right"), atlasBounds.getNumber("top")};
-            glyphMetadata.setAtlasBounds(bounds);
+            glm::vec4 bounds{
+                atlasBounds.getNumber("left").value(std::format("Could not find glyphs[{}].atlasBounds.left in font metadata", i)),
+                atlasBounds.getNumber("bottom").value(std::format("Could not find glyphs[{}].atlasBounds.bottom in font metadata", i)),
+                atlasBounds.getNumber("right").value(std::format("Could not find glyphs[{}].atlasBounds.right in font metadata", i)),
+                atlasBounds.getNumber("top").value(std::format("Could not find glyphs[{}].atlasBounds.top in font metadata", i))
+            };            glyphMetadata.setAtlasBounds(bounds);
         }
 
         metadata.addGlyph(std::move(glyphMetadata));
